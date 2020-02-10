@@ -10,4 +10,5 @@ edition = "2018"
 structopt = "0.2.10"
 failure = "0.1.5"
 exitfailure = "0.5.1"
-indicatif = {version = "*", features = ["with_rayon"]}
+indicatif = "0.14.0"
+log = "0.4.8"
