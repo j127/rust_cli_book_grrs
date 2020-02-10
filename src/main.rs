@@ -32,6 +32,16 @@ fn draw_progress_bar() {
     bar.finish();
 }
 
+fn create_string() -> &'static str {
+    "hello world"
+}
+
+/// Type `cargo test` to run the test.
+#[test]
+fn check_create_string() {
+    assert_eq!(create_string(), "hello world");
+}
+
 /// To run it with the logger output, use this:
 /// `env RUST_LOG=grrs=info cargo run -- Ok src/main.rs`
 #[allow(unused_variables)]
