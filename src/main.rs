@@ -1,4 +1,5 @@
 use std::{thread, time};
+use log::{info, warn};
 use structopt::StructOpt;
 use failure::ResultExt;
 use exitfailure::ExitFailure;
@@ -31,8 +32,12 @@ fn draw_progress_bar() {
     bar.finish();
 }
 
+/// To run it with the logger output, use this:
+/// `env RUST_LOG=grrs=info cargo run -- Ok src/main.rs`
 #[allow(unused_variables)]
 fn main() -> Result<(), ExitFailure> {
+    env_logger::init();
+    info!("starting up");
     let pattern = std::env::args().nth(1).expect("no pattern given");
     let path = std::env::args().nth(2).expect("no path given");
 
@@ -43,5 +48,7 @@ fn main() -> Result<(), ExitFailure> {
         .with_context(|_| format!("could not read file `{}`", path))?;
     draw_progress_bar();
     println!("file content: {}", content);
+    warn!("this could be a warning, if needed");
+    info!("done");
     Ok(())
 }
