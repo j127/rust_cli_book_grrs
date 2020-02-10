@@ -20,9 +20,12 @@ fn main() {
     let content = std::fs::read_to_string(&args.path)
         .expect("could not read file");
 
+    let result = std::fs::read_to_string("");
+
     for line in content.lines() {
         if line.contains(&args.pattern) {
             println!("{}", line);
         }
     }
+
 }
