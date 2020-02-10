@@ -19,13 +19,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Cli::from_args();
     // println!("pattern = {}, path = {}", pattern, path);
 
-    let result = std::fs::read_to_string(&args.path);
-    let content = match result {
-        Ok(content) => { content },
-        Err(error) => { return Err(error.into()); }
-    };
-
+    let content = std::fs::read_to_string(&args.path)?;
     println!("file content: {}", content);
     Ok(())
-
 }
