@@ -32,14 +32,34 @@ fn draw_progress_bar() {
     bar.finish();
 }
 
+// The writer here makes it testable -- a placeholder for any type that
+// implements the Write trait.
+#[allow(dead_code)]
+#[allow(unused)]
+fn find_matches(content: &str, pattern: &str, mut writer: impl std::io::Write) {
+    for line in content.lines() {
+        if line.contains(pattern) {
+            writeln!(writer, "{}", line);
+        }
+    }
+}
+
+#[allow(dead_code)]
 fn create_string() -> &'static str {
     "hello world"
 }
 
-/// Type `cargo test` to run the test.
+/// Type `cargo test` to run the tests.
 #[test]
 fn check_create_string() {
     assert_eq!(create_string(), "hello world");
+}
+
+#[test]
+fn find_a_match() {
+    let mut result = Vec::new();
+    find_matches("lorem ipsum\ndolor sit amet", "lorem", &mut result);
+    assert_eq!(result, b"lorem ipsum\n")
 }
 
 /// To run it with the logger output, use this:
@@ -55,9 +75,15 @@ fn main() -> Result<(), ExitFailure> {
     // println!("pattern = {}, path = {}", pattern, path);
 
     let content = std::fs::read_to_string(&args.path)
-        .with_context(|_| format!("could not read file `{}`", path))?;
+        .with_context(|_| format!("could not read file `{}`", args.path.display()))?;
+
     draw_progress_bar();
-    println!("file content: {}", content);
+
+    find_matches(&content, &args.pattern, &mut std::io::stdout());
+
+    // This just preinted the contents of the file.
+    // println!("file content: {}", content);
+
     warn!("this could be a warning, if needed");
     info!("done");
     Ok(())
