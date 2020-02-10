@@ -1,6 +1,7 @@
 use structopt::StructOpt;
 
 /// Search for a pattern in a file and display the lines that contain it.
+#[allow(dead_code)]
 #[derive(StructOpt)]
 struct Cli {
     /// The pattern to look for
@@ -11,22 +12,20 @@ struct Cli {
 }
 
 #[allow(unused_variables)]
-fn main() {
+fn main() -> Result<(), Box<dyn std::error::Error>> {
     let pattern = std::env::args().nth(1).expect("no pattern given");
     let path = std::env::args().nth(2).expect("no path given");
 
     let args = Cli::from_args();
     // println!("pattern = {}, path = {}", pattern, path);
 
-    let content = std::fs::read_to_string(&args.path)
-        .expect("could not read file");
+    let result = std::fs::read_to_string(&args.path);
+    let content = match result {
+        Ok(content) => { content },
+        Err(error) => { return Err(error.into()); }
+    };
 
-    let result = std::fs::read_to_string("");
-
-    for line in content.lines() {
-        if line.contains(&args.pattern) {
-            println!("{}", line);
-        }
-    }
+    println!("file content: {}", content);
+    Ok(())
 
 }
